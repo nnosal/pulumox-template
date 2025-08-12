@@ -132,7 +132,7 @@ class ProxmoxProvider(BaseProvider):
             'timeout_stop_vm': 5, 'timeout_shutdown_vm': 10, # fix: shutdown vm
             'timeout_reboot': 30, # fix: reboot vm (when updating)
             'vm_id': vm_config['vm_id'],
-            'node_name': vm_config['node_name'] if vm_config.get('node_name') and vm_config['node_name'] != 'testnode' else self.get_default_proxmox_node(),
+            'node_name': vm_config['node_name'] if vm_config.get('node_name') and vm_config['node_name'] != 'auto' else self.get_default_proxmox_node(),
             'name': vm_config['name'],
             'agent': proxmox.vm.VirtualMachineAgentArgs(**vm_config['agent']) if vm_config.get('agent') else None,
             'stop_on_destroy': True if not vm_config.get('agent', {}).get('enabled') else False,
@@ -346,7 +346,7 @@ class ProxmoxProvider(BaseProvider):
         config = {
             # REQUIRED
             'name': vm_config['name'],
-            'node_name': vm_config['node_name'] if vm_config.get('node_name') and vm_config['node_name'] != 'testnode' else self.get_default_proxmox_node(),
+            'node_name': vm_config['node_name'] if vm_config.get('node_name') and vm_config['node_name'] != 'auto' else self.get_default_proxmox_node(),
             # SIMPLE
             'description': vm_config['description'] if vm_config.get('description') else None,
             'tags': vm_config.get('tags') if vm_config.get('tags') else None,
@@ -389,7 +389,7 @@ class ProxmoxProvider(BaseProvider):
         config = {
             "resource_name": img_config.get( "name" ),
             "source_file": { "path": img_config.get( "path", img_config.get( "url", "") ) },
-            'node_name': img_config['node_name'] if img_config.get('node_name') and img_config['node_name'] != 'testnode' else self.get_default_proxmox_node(),
+            'node_name': img_config['node_name'] if img_config.get('node_name') and img_config['node_name'] != 'auto' else self.get_default_proxmox_node(),
             "datastore_id": img_config.get( "datastore_id", "local" ),
             "content_type": img_config.get( "content_type", content_type ),
 
@@ -431,7 +431,7 @@ class ProxmoxProvider(BaseProvider):
             }, "snippets", "push")
         """
         if not img_config.get("name"): raise ValueError("La clé 'name' est requise pour le nom de la ressource Pulumi.")
-        node_name = img_config['node_name'] if img_config.get('node_name') and img_config['node_name'] != 'testnode' else self.get_default_proxmox_node(),
+        node_name = img_config['node_name'] if img_config.get('node_name') and img_config['node_name'] != 'auto' else self.get_default_proxmox_node(),
         base_config = { "resource_name": img_config.get("name"), "node_name": node_name, "datastore_id": img_config.get("datastore_id", "local")}
         if img_config.get("overwrite_unmanaged"): base_config["overwrite_unmanaged"] = img_config.get("overwrite_unmanaged")
         # If img_type not "auto" or ""

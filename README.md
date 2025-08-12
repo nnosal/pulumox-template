@@ -1,4 +1,4 @@
-# Pulumox - 📦 Pulumi template for Proxmox - READY2GO 🚀
+# Pulumox - 📦 Pulumi Template + Proxmox - READY2GO 🚀
 ![GitHub last commit](https://img.shields.io/github/last-commit/nnosal/pulumox-template?style=flat-square)
 
 Un template pré-configurées pour [Pulumi](https://github.com/pulumi/pulumi), permettant une installation en 1-clic de VM Windows, Mac, Linux.

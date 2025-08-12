@@ -2,5 +2,5 @@ vmimgs:
 - name: test-latest-virtio-win
   file_name: test-virtio-win.iso
   url: https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
-  node_name: "testnode"
+  node_name: "auto"
   datastore_id: "local"
