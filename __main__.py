@@ -1,6 +1,6 @@
 import pulumi, os, textwrap, requests
 from src.provisionner.proxmox import ProxmoxProvider as Proxmox
-#from src.tools.file import LoadFile
+from src.tools.file import LoadFile
 
 if __name__ == "__main__":
 
@@ -13,6 +13,9 @@ if __name__ == "__main__":
       "password": config.require_secret("pve_password")
     }
   cluster = Proxmox(  name='default', config=proxmoxConfig )
+
+  # Test
+  cluster.provision( LoadFile().yaml('templates/_test/1.yml') )
 
   # ###############
   # ### WINDOWS ###

@@ -13,7 +13,7 @@ PULUMOX_SSH_PRIVATKEY = "{{ exec(command='[ -f ~/.pulumox/ssh_id_rsa ] || (mkdir
 PULUMOX_SSH_VM_PUBKEY = "{{ exec(command='[ -f ~/.pulumox/ssh_id_rsa.pub ] || (mkdir -p ~/.pulumox && ssh-keygen -t rsa -b 4096 -N \"\" -f ~/.pulumox/ssh_id_rsa -q); cat ~/.pulumox/ssh_id_rsa.pub') }}"
 
 [tasks]
-prev = 'pulumi preview'
+show = 'pulumi preview'
 up = 'pulumi up'
 del = 'pulumi destroy'
 main = 'uv run __main__.py'
