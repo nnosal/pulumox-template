@@ -1,0 +1,22 @@
+name: ${PROJECT}
+description: ${DESCRIPTION}
+runtime:
+  name: python
+  options:
+    toolchain: uv
+template:
+  description: Template for setup VMs (Linux/Mac/Windows) blazing fast on Proxmox with Pulumi.
+  important: true
+  config:
+    pulumox:pve_url:
+      description: The endpoint URL for reach your Proxmox instance.
+      default: https://192.168.0.30:8006/
+    pulumox:pve_url_insecure:
+      description: The endpoint URL is insecure (like lan?)
+      default: True
+    pulumox:pve_username:
+      description: Proxmox user (must have admin rights)
+      default: root@pam
+    pulumox:pve_password:
+      description: Proxmox password (will be store as pulumi secret)
+      secret: true

@@ -1,0 +1,11 @@
+*.pyc
+venv/
+*.egg-info
+__pycache__
+*.[iI][sS][oO]
+*.[iI][mM][gG]
+*.[vV][hH][dD][xX]
+*.[lL][oO][gG]
+_o
+_todel
+.pulumi
