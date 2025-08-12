@@ -1,7 +1,7 @@
 [project]
 name = "pulumox"
 version = "0.1.0"
-description = "setup VMs (Linux/Mac/Windows) blazing fast on Proxmox with Pulumi."
+description = "Setup VMs (Linux/Mac/Windows) blazing fast on Proxmox with Pulumi."
 requires-python = ">=3.9,<3.13"
 dependencies = [
     "requests>=2.32.4",

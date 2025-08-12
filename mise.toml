@@ -1,0 +1,19 @@
+[tools]
+pulumi = "latest"
+task = "latest"
+uv = "latest"
+
+[env]
+_.python.venv = { path = ".venv", create = false }
+# Passphrase stockée dans un fichier, créé automatiquement si absent # Replace: "PULUMI_CONFIG_PASSPHRASE = "MY_PASS"
+PULUMI_CONFIG_PASSPHRASE_FILE = "{{ exec(command='[ -f ~/.pulumox/passphrase.txt ] || (mkdir -p ~/.pulumox && head -c 32 /dev/urandom | base64 > ~/.pulumox/passphrase.txt); echo ~/.pulumox/passphrase.txt') }}"
+# Clé privée SSH générée si absente
+PULUMOX_SSH_PRIVATKEY = "{{ exec(command='[ -f ~/.pulumox/ssh_id_rsa ] || (mkdir -p ~/.pulumox && ssh-keygen -t rsa -b 4096 -N \"\" -f ~/.pulumox/ssh_id_rsa -q); cat ~/.pulumox/ssh_id_rsa') }}"
+# Clé publique SSH générée si absente
+PULUMOX_SSH_VM_PUBKEY = "{{ exec(command='[ -f ~/.pulumox/ssh_id_rsa.pub ] || (mkdir -p ~/.pulumox && ssh-keygen -t rsa -b 4096 -N \"\" -f ~/.pulumox/ssh_id_rsa -q); cat ~/.pulumox/ssh_id_rsa.pub') }}"
+
+[tasks]
+prev = 'pulumi preview'
+up = 'pulumi up'
+del = 'pulumi destroy'
+main = 'uv run __main__.py'
