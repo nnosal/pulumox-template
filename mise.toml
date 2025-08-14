@@ -17,3 +17,50 @@ show = 'pulumi preview'
 up = 'pulumi up'
 del = 'pulumi destroy'
 main = 'uv run __main__.py'
+
+[tasks.gentpl_struct]
+description = "Generate default tpl structure.."
+tools.uv = "latest"
+run = '''
+#!/usr/bin/env uv run --script
+# /// script
+# dependencies = []
+# ///
+import os
+files = [
+    # Windows
+    "templates/windows/_base.yaml", "templates/windows/10.yaml", "templates/windows/11.yaml",
+    # Mac 2020 Era
+    "templates/mac/_base.yaml", "templates/mac/11-big-sur.yaml", "templates/mac/12-monterey.yaml",
+    "templates/mac/13-ventura.yaml", "templates/mac/14-sonoma.yaml", "templates/mac/15-sequoia.yaml",
+    "templates/mac/26-tahoe.yaml",
+    # Mac 2010 Era
+    "templates/mac/_base10.yaml", "templates/mac/10.7-lion.yaml", "templates/mac/10.8-mountain-lion.yaml",
+    "templates/mac/10.9-mavericks.yaml", "templates/mac/10.10-yosemite.yaml", "templates/mac/10.11-el-capitan.yaml",
+    "templates/mac/10.12-sierra.yaml", "templates/mac/10.13-high-sierra.yaml",
+    "templates/mac/10.14-mojave.yaml", "templates/mac/10.15-catalina.yaml",
+    # Linux
+    "templates/linux/_base.yaml", "templates/linux/ubuntu.yaml", "templates/linux/debian.yaml",
+    "templates/linux/centos-stream.yaml", "templates/linux/linux-mint.yaml", "templates/linux/manjaro.yaml",
+]
+content_base = """# Template: {file}
+---
+vmimgs:
+vmtpls2:
+vmtpls:
+vms:
+lxcimgs:
+lxcs:
+"""
+content_extended = "#extends _base.yaml\n# Template: {file}\n---\n"
+content_extended10 = "#extends _base10.yaml\n# Template: {file}\n---\n"
+
+for f in files:
+    os.makedirs(os.path.dirname(f), exist_ok=True)
+    with open(f, "w", encoding="utf-8") as file:
+        file.write(
+            content_base.format(file=f) if "_base" in f else
+            content_extended10.format(file=f) if f.startswith("templates/mac/10.") else
+            content_extended.format(file=f)
+        )
+'''
