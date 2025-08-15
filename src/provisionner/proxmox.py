@@ -30,11 +30,36 @@ class ProxmoxProvider(BaseProvider):
 
     def test_provider(self) -> proxmox.cluster.get_nodes:
         """
-        Test the Proxmox provider connection and return available node names.
+        Test the Proxmox provider connection et export JSON réutilisable pour les nodes.
         """
         try:
             self.nodes_available = proxmox.cluster.get_nodes(opts=pulumi.InvokeOptions(provider=self.provider))
-            print(f"Sucess connect. Nodes availables: {self.nodes_available.names}")
+            print(f"Success connect. Nodes availables: {self.nodes_available.names}")
+            nodes_data = {}
+            for idx, node_name in enumerate(self.nodes_available.names):
+                net_info = proxmox.network.get_hosts(node_name=node_name, opts=pulumi.InvokeOptions(provider=self.provider))
+                node_info = proxmox.get_node(node_name=node_name, opts=pulumi.InvokeOptions(provider=self.provider))
+                # IP routable
+                ip = next((e['address'] for e in net_info.entries if not e['address'].startswith("127.") and not e['address'].startswith("::1")), None)
+                nodes_data[node_name] = {
+                    "_node": node_info,
+                    "_net": net_info,
+                    "name": node_name,
+                    "online": self.nodes_available.onlines[idx],
+                    "uptime": self.nodes_available.uptimes[idx],
+                    "ssl_fingerprints": self.nodes_available.ssl_fingerprints[idx],
+                    "cpu": f"{self.nodes_available.cpu_utilizations[idx]}/{self.nodes_available.cpu_counts[idx]}",
+                    "memory": f"{self.nodes_available.memory_useds[idx]}/{self.nodes_available.memory_availables[idx]}",
+                    "ip": ip,
+                    #"_ssh": {
+                    #    "host": ip,
+                    #    "user": os.environ.get("PULUMOX_SSH_USER", "root"),
+                    #    "privkey": os.environ.get("PULUMOX_SSH_PRIVATKEY", read_key("~/.ssh/id_rsa")),
+                    #    "privkey_file": os.environ.get("PULUMOX_SSH_PRIVATKEY_FILE", "~/.ssh/id_rsa" )
+                    #}
+                }
+            self.nodes_data = nodes_data
+            pulumi.export('proxmox_nodes_data', nodes_data)
         except Exception as e:
             pulumi.log.error(f"Erreur lors de la tentative de connexion Proxmox VE: {e}")
 
